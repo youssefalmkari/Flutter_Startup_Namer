@@ -19,17 +19,33 @@ class RandomWords extends StatefulWidget {
 }
 
 class RandomWordsState extends State<RandomWords> {
-  @override
-  Widget build(BuildContext context) {
     final _suggestions = <WordPair>[];
+    final _saved = new Set<WordPair>();
     final _biggerFont = const TextStyle(fontSize: 18.0);
 
+  @override
+  Widget build(BuildContext context) {
+
     Widget _buildRow(WordPair pair) {
+      final alreadySaved = _saved.contains(pair);
       return new ListTile(
         title: new Text(
           pair.asPascalCase,
           style: _biggerFont,
         ),
+        trailing: new Icon(
+          alreadySaved ? Icons.favorite : Icons.favorite_border,
+          color: alreadySaved ? Colors.red : null,
+        ),
+        onTap: () {
+          setState(() {
+            if(alreadySaved) {
+              _saved.remove(pair);
+            } else {
+              _saved.add(pair);
+            }
+          });
+        },
       );
     }
 
@@ -45,7 +61,6 @@ class RandomWordsState extends State<RandomWords> {
           itemBuilder: (context, i) {
             // Add a one-pixel-high divider widget before each row in theListView.
             if (i.isOdd) return new Divider();
-
             // The syntax "i ~/ 2" divides i by 2 and returns an integer result.
             // For example: 1, 2, 3, 4, 5 becomes 0, 1, 1, 2, 2.
             // This calculates the actual number of word pairings in the ListView,
@@ -63,6 +78,7 @@ class RandomWordsState extends State<RandomWords> {
     return new Scaffold(
       appBar: new AppBar(
         title: new Text('Startup Name Generator'),
+        backgroundColor: Colors.lightGreen,
       ),
       body: _buildSuggestions(),
     );
