@@ -22,41 +22,77 @@ class RandomWords extends StatefulWidget {
 }
 
 class RandomWordsState extends State<RandomWords> {
-    final _suggestions = <WordPair>[];
-    final _saved = new Set<WordPair>();
-    final _biggerFont = const TextStyle(fontSize: 18.0);
+  final _suggestions = <WordPair>[];
+  final _saved = new Set<WordPair>();
+  final _biggerFont = const TextStyle(fontSize: 18.0);
 
-    void _pushSaved() {
-      Navigator.of(context).push(
-        new MaterialPageRoute(
-          builder: (context) {
-            final tiles = _saved.map(
-              (pair) {
-                return new ListTile(
-                  title: new Text(
-                    pair.asPascalCase,
-                    style: _biggerFont,
-                  ),
-                );
-              }
-            );
-            final divided = ListTile
-            .divideTiles(
-              context: context,
-              tiles: tiles,
-            )
-            .toList();
+  void _pushSaved() {
+    Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
+      final tiles = _saved.map((pair) {
+        return new ListTile(
+          title: new Text(
+            pair.asPascalCase,
+            style: _biggerFont,
+          ),
+        );
+      });
+      final divided = ListTile
+          .divideTiles(
+            context: context,
+            tiles: tiles,
+          )
+          .toList();
 
-            return new Scaffold(
-              appBar: new AppBar(
-                title: new Text('Saved Suggestions'),
-              ),
-              body: new ListView(children: divided),
-            );
-          }
-        )
+      return new Scaffold(
+        appBar: new AppBar(
+          title: new Text('Saved Suggestions'),
+        ),
+        body: new ListView(children: divided),
       );
-    }
+    }));
+  }
+
+  void _showLayout() {
+    Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
+      Widget titleSelection = new Container(
+        padding: const EdgeInsets.all(32.0),
+        child: new Row(
+          children: [
+            new Expanded(
+              child: new Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  new Container(
+                    padding: new EdgeInsets.only(bottom: 8.0),
+                    child: new Text(
+                      'Brand New Layout!',
+                      style: new TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  new Text(
+                    'How great is Flutter?!',
+                    style: new TextStyle(color: Colors.grey[500]),
+                  )
+                ],
+              ),
+            ),
+            new Icon(
+              Icons.star,
+              color: Colors.red[500],
+            ),
+            new Text('41'),
+          ],
+        ),
+      );
+
+      return new Scaffold(
+        appBar: new AppBar(
+          title: new Text('Layout'),
+        ),
+        body: titleSelection,
+      );
+    }));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +109,7 @@ class RandomWordsState extends State<RandomWords> {
         ),
         onTap: () {
           setState(() {
-            if(alreadySaved) {
+            if (alreadySaved) {
               _saved.remove(pair);
             } else {
               _saved.add(pair);
@@ -109,12 +145,18 @@ class RandomWordsState extends State<RandomWords> {
           });
     }
 
-
     return new Scaffold(
       appBar: new AppBar(
         title: new Text('Startup Name Generator'),
         actions: <Widget>[
-          new IconButton(icon: new Icon(Icons.list), onPressed: _pushSaved,),
+          new IconButton(
+            icon: new Icon(Icons.list),
+            onPressed: _pushSaved,
+          ),
+          new IconButton(
+            icon: new Icon(Icons.memory),
+            onPressed: _showLayout,
+          ),
         ],
       ),
       body: _buildSuggestions(),
